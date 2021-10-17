@@ -1,4 +1,4 @@
-module awesomeSql
+module github.com/overmesgit/awesomeSql
 
 go 1.17
 
