@@ -1,11 +1,11 @@
 package user_grpc
 
 import (
-	"awesomeSql/user_service"
 	"context"
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
+	"github.com/overmesgit/awesomeSql/user_service"
 	"google.golang.org/grpc"
 	"log"
 	"net"

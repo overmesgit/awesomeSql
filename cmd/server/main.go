@@ -1,7 +1,7 @@
 package main
 
 import (
-	"awesomeSql/user_grpc"
+	"github.com/overmesgit/awesomeSql/user_grpc"
 )
 
 func main() {

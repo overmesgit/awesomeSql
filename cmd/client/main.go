@@ -1,9 +1,9 @@
 package main
 
 import (
-	pb "awesomeSql/user_grpc"
 	"context"
 	"flag"
+	pb "github.com/overmesgit/awesomeSql/user_grpc"
 	"google.golang.org/grpc"
 	"log"
 	"time"

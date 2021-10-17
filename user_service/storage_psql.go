@@ -1,9 +1,9 @@
 package user_service
 
 import (
-	"awesomeSql/user_service/models"
 	"context"
 	"database/sql"
+	"github.com/overmesgit/awesomeSql/user_service/models"
 	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 )

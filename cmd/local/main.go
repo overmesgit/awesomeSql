@@ -1,11 +1,11 @@
 package main
 
 import (
-	"awesomeSql/user_service/models"
 	"context"
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
+	"github.com/overmesgit/awesomeSql/user_service/models"
 	"log"
 	"os"
 )
