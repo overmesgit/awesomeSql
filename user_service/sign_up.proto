@@ -1,0 +1,23 @@
+syntax = "proto3";
+option go_package = "user/grpc";
+
+service UserSignUp {
+  rpc SignUp (SignUpRequest) returns (LoginResponse) {}
+  rpc Login (LoginRequest) returns (LoginResponse) {}
+}
+
+message SignUpRequest {
+  string username = 1;
+  string password = 2;
+  string email = 3;
+  string mood = 4;
+}
+
+message LoginResponse {
+  int32 user_id = 1;
+}
+
+message LoginRequest {
+  string password = 1;
+  string email = 2;
+}

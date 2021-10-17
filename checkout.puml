@@ -1,0 +1,9 @@
+@startuml
+
+start
+:Find product;
+:Add product to basket;
+:Purchase product;
+stop
+
+@enduml

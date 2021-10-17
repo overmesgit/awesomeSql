@@ -1,0 +1,11 @@
+output   = "pkg/user/models"
+wipe     = true
+
+[psql]
+dbname = "gogo"
+host   = "localhost"
+port   = 5432
+user   = "data"
+pass   = "kZFVyaKhrE2o+glkuF06Eg=="
+whitelist = ["users"]
+blacklist = ["schema_migrations"]

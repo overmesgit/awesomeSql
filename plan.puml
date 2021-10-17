@@ -1,0 +1,34 @@
+@startuml
+skinparam actorStyle awesome
+!theme plain
+left to right direction
+
+:User: as user
+:Seller: as seller
+
+user -> (Frontend)
+
+(Frontend) -d-> Product
+(Frontend) -d-> Basket
+(Frontend) -d-> User
+
+seller -> (Frontend)
+
+package User {
+  (Sign up)
+  (Login)
+}
+
+package Product {
+  (Add product)
+  (Get product)
+  (List product)
+}
+
+package Basket {
+  (Add to basket)
+  (Checkout)
+  (Cancel)
+}
+
+@enduml
