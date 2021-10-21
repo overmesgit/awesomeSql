@@ -1,1 +1,1 @@
-go build cmd/server/main.go
+make: go build cmd/server/main.go
