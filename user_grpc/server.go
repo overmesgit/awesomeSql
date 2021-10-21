@@ -2,10 +2,10 @@ package user_grpc
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
-	"github.com/overmesgit/awesomeSql/user_service"
+	"github.com/overmesgit/awesomeSql/login"
+	"github.com/overmesgit/awesomeSql/login_psql"
 	"google.golang.org/grpc"
 	"log"
 	"net"
@@ -13,12 +13,15 @@ import (
 )
 
 type server struct {
-	storage user_service.Storage
+	service login.UserService
 	UnimplementedUserSignUpServer
 }
 
 func (s *server) SignUp(ctx context.Context, in *SignUpRequest) (*LoginResponse, error) {
-	userObj, err := user_service.SingUp(s.storage, in.Username, in.Password, in.Email, in.Mood)
+	req := login.SignUpRequest{
+		Username: in.Username, Password: login.Password(in.Password),
+		Email: in.Email, Mood: in.Mood}
+	userObj, err := s.service.SingUp(req)
 	if err != nil {
 		return nil, err
 	}
@@ -26,7 +29,9 @@ func (s *server) SignUp(ctx context.Context, in *SignUpRequest) (*LoginResponse,
 }
 
 func (s *server) Login(ctx context.Context, in *LoginRequest) (*LoginResponse, error) {
-	userObj, err := user_service.Login(s.storage, in.Email, in.Password)
+	userObj, err := s.service.Login(login.LoginRequest{
+		Email: in.Email, Password: login.Password(in.Password),
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -35,18 +40,17 @@ func (s *server) Login(ctx context.Context, in *LoginRequest) (*LoginResponse, e
 
 func Start() {
 	conn := fmt.Sprintf("dbname=gogo user=%s password=%s", os.Getenv("DB_USER"), os.Getenv("DB_PASS"))
-	db, err := sql.Open("postgres", conn)
+	psqlStorage, err := login_psql.NewPSQLStorage(conn)
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
-	psqlStorage := user_service.NewPSQLStorage(db)
 	lis, err := net.Listen("tcp", "127.0.0.1:8080")
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	RegisterUserSignUpServer(s, &server{storage: psqlStorage})
+	RegisterUserSignUpServer(s, &server{service: login.UserService{Storage: psqlStorage}})
 	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
