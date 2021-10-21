@@ -4,7 +4,7 @@
 // 	protoc        v3.6.1
 // source: sign_up.proto
 
-package user_grpc
+package login_grpc
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"

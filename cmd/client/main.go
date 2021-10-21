@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"flag"
-	pb "github.com/overmesgit/awesomeSql/user_grpc"
+	pb "github.com/overmesgit/awesomeSql/login_grpc"
 	"google.golang.org/grpc"
 	"log"
 	"time"

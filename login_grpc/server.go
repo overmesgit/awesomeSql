@@ -1,4 +1,4 @@
-package user_grpc
+package login_grpc
 
 import (
 	"context"

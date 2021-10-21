@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
-	"github.com/overmesgit/awesomeSql/user_service/models"
+	"github.com/overmesgit/awesomeSql/login_psql/models"
 	"log"
 	"os"
 )
