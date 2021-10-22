@@ -13,7 +13,6 @@ import (
 	"log"
 	"net"
 	"os"
-	"reflect"
 )
 
 type server struct {
@@ -37,7 +36,6 @@ func (s *server) Login(ctx context.Context, in *LoginRequest) (*LoginResponse, e
 		Email: in.Email, Password: login.Password(in.Password),
 	})
 	if err != nil {
-		log.Println(reflect.TypeOf(err))
 		switch err.Code() {
 		case login.UserNotFoundError:
 			return nil, status.Error(codes.NotFound, err.Error())
