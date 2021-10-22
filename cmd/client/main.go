@@ -5,6 +5,7 @@ import (
 	"flag"
 	pb "github.com/overmesgit/awesomeSql/login_grpc"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/status"
 	"log"
 	"time"
 )
@@ -18,8 +19,11 @@ var (
 )
 
 func main() {
-	// Set up a connection to the server.
-	conn, err := grpc.Dial("127.0.0.1:8080", grpc.WithInsecure(), grpc.WithBlock())
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	target := "127.0.0.1:8080"
+	conn, err := grpc.DialContext(ctx, target, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
@@ -28,7 +32,7 @@ func main() {
 
 	flag.Parse()
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel = context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
 	if *command == "signup" {
@@ -46,8 +50,14 @@ func main() {
 			Email: *email, Password: *password,
 		}
 		r, err := c.Login(ctx, &request)
+
 		if err != nil {
-			log.Fatalf("could not login: %v", err)
+			st, ok := status.FromError(err)
+			if ok {
+				log.Fatalf("could not login: c: %v m: %v d: %v", st.Code(), st.Message(), st.Details())
+			} else {
+				log.Fatalf("could not login: %v", err)
+			}
 		}
 		log.Printf("%v: %v", *command, r.GetUserId())
 	}

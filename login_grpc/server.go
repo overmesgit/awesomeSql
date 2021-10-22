@@ -2,14 +2,18 @@ package login_grpc
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	_ "github.com/lib/pq"
 	"github.com/overmesgit/awesomeSql/login"
 	"github.com/overmesgit/awesomeSql/login_psql"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"log"
 	"net"
 	"os"
+	"reflect"
 )
 
 type server struct {
@@ -23,7 +27,7 @@ func (s *server) SignUp(ctx context.Context, in *SignUpRequest) (*LoginResponse,
 		Email: in.Email, Mood: in.Mood}
 	userObj, err := s.service.SingUp(req)
 	if err != nil {
-		return nil, err
+		return nil, errors.New(err.Error())
 	}
 	return &LoginResponse{UserId: int32(userObj.UserID)}, nil
 }
@@ -33,7 +37,13 @@ func (s *server) Login(ctx context.Context, in *LoginRequest) (*LoginResponse, e
 		Email: in.Email, Password: login.Password(in.Password),
 	})
 	if err != nil {
-		return nil, err
+		log.Println(reflect.TypeOf(err))
+		switch err.Code() {
+		case login.UserNotFoundError:
+			return nil, status.Error(codes.NotFound, err.Error())
+		default:
+			return nil, err
+		}
 	}
 	return &LoginResponse{UserId: int32(userObj.UserID)}, nil
 }
@@ -45,7 +55,7 @@ func Start() {
 		log.Fatal(err)
 		return
 	}
-	lis, err := net.Listen("tcp", "0.0.0.0:5000")
+	lis, err := net.Listen("tcp", "0.0.0.0:8080")
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}

@@ -12,10 +12,14 @@ type LoginRequest struct {
 
 var validate = validator.New()
 
-func (s UserService) Login(req LoginRequest) (user *User, err error) {
+func (s UserService) Login(req LoginRequest) (*User, *Error) {
 	errs := validate.Struct(req)
 	if errs != nil {
-		return nil, errs
+		return nil, WrapError(errs, "validation error", ValidationError)
 	}
-	return s.CheckPassword(req.Email, req.Password.Hash())
+	user, err := s.CheckPassword(req.Email, req.Password.Hash())
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }

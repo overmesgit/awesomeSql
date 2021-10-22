@@ -3,7 +3,6 @@ package login
 import (
 	"crypto/sha256"
 	"fmt"
-	"github.com/go-playground/validator/v10"
 )
 
 const (
@@ -30,22 +29,7 @@ func (p Password) Hash() string {
 }
 
 type Storage interface {
-	Create(user *User, passwordHash string) (int, error)
-	GetUser(userId int) (*User, error)
-	CheckPassword(email string, passwordHash string) (*User, error)
-}
-
-func GetFormErrors(err error) map[string][]map[string]string {
-	errorResp := map[string][]map[string]string{}
-	for _, fieldErr := range err.(validator.ValidationErrors) {
-		errorResp[fieldErr.Field()] = append(errorResp[fieldErr.StructField()],
-			map[string]string{
-				"field":   fieldErr.Field(),
-				"tag":     fieldErr.Tag(),
-				"param":   fieldErr.Param(),
-				"message": fieldErr.Error(),
-			})
-		fmt.Println(fieldErr.Field(), fieldErr.Tag(), fieldErr.Param())
-	}
-	return errorResp
+	Create(user *User, passwordHash string) (int, *Error)
+	GetUser(userId int) (*User, *Error)
+	CheckPassword(email string, passwordHash string) (*User, *Error)
 }
