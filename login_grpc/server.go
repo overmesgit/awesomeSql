@@ -47,7 +47,8 @@ func (s *server) Login(ctx context.Context, in *LoginRequest) (*LoginResponse, e
 }
 
 func Start() {
-	conn := fmt.Sprintf("host=%s dbname=%s user=%s password=%s", os.Getenv("DB_HOST"), os.Getenv("DB_BASE"), os.Getenv("DB_USER"), os.Getenv("DB_PASS"))
+	conn := fmt.Sprintf("host=%s dbname=%s user=%s password=%s",
+		os.Getenv("DB_HOST"), os.Getenv("DB_BASE"), os.Getenv("DB_USER"), os.Getenv("DB_PASS"))
 	psqlStorage, err := login_psql.NewPSQLStorage(conn)
 	if err != nil {
 		log.Fatal(err)

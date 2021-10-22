@@ -7,6 +7,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/status"
 	"log"
+	"os"
 	"time"
 )
 
@@ -22,7 +23,7 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	target := "127.0.0.1:8080"
+	target := os.Getenv("HOST")
 	conn, err := grpc.DialContext(ctx, target, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
