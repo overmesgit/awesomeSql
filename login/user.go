@@ -12,7 +12,7 @@ const (
 )
 
 type User struct {
-	UserID   int
+	UserID   int32
 	Username string
 	Email    string
 	Mood     string
@@ -29,7 +29,7 @@ func (p Password) Hash() string {
 }
 
 type Storage interface {
-	Create(user *User, passwordHash string) (int, *Error)
-	GetUser(userId int) (*User, *Error)
+	Create(user *User, passwordHash string) (int32, *Error)
+	GetUser(userId int32) (*User, *Error)
 	CheckPassword(email string, passwordHash string) (*User, *Error)
 }

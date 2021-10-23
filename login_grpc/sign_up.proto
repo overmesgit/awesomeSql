@@ -1,5 +1,5 @@
 syntax = "proto3";
-option go_package = "user/grpc";
+option go_package = "login/login_grpc";
 
 service UserSignUp {
   rpc SignUp (SignUpRequest) returns (LoginResponse) {}

@@ -133,5 +133,5 @@ var UserSignUp_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "sign_up.proto",
+	Metadata: "login_grpc/sign_up.proto",
 }

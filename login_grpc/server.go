@@ -28,7 +28,8 @@ func (s *server) SignUp(ctx context.Context, in *SignUpRequest) (*LoginResponse,
 	if err != nil {
 		return nil, errors.New(err.Error())
 	}
-	return &LoginResponse{UserId: int32(userObj.UserID)}, nil
+	user := User{UserId: userObj.UserID, Username: userObj.Username, Email: userObj.Email, Mood: userObj.Mood}
+	return &LoginResponse{User: &user}, nil
 }
 
 func (s *server) Login(ctx context.Context, in *LoginRequest) (*LoginResponse, error) {
@@ -43,7 +44,8 @@ func (s *server) Login(ctx context.Context, in *LoginRequest) (*LoginResponse, e
 			return nil, err
 		}
 	}
-	return &LoginResponse{UserId: int32(userObj.UserID)}, nil
+	user := User{UserId: userObj.UserID, Username: userObj.Username, Email: userObj.Email, Mood: userObj.Mood}
+	return &LoginResponse{User: &user}, nil
 }
 
 func Start() {

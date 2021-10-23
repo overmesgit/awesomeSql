@@ -23,7 +23,7 @@ func NewPSQLStorage(conn string) (*PSQLStorage, error) {
 	return &PSQLStorage{db}, nil
 }
 
-func (s *PSQLStorage) Create(user *login.User, passwordHash string) (int, *login.Error) {
+func (s *PSQLStorage) Create(user *login.User, passwordHash string) (int32, *login.Error) {
 	userObj := &models.User{Username: user.Username, Password: passwordHash, Email: user.Email,
 		Mood: null.StringFrom(user.Mood)}
 	err := userObj.Insert(context.TODO(), s.db, boil.Infer())
@@ -37,11 +37,11 @@ func (s *PSQLStorage) Create(user *login.User, passwordHash string) (int, *login
 			return 0, login.WrapError(err, "internal error", login.InternalError)
 		}
 	}
-	return userObj.UserID, nil
+	return int32(userObj.UserID), nil
 }
 
-func (s *PSQLStorage) GetUser(userId int) (*login.User, *login.Error) {
-	userObj, err := models.Users(models.UserWhere.UserID.EQ(userId)).One(context.TODO(), s.db)
+func (s *PSQLStorage) GetUser(userId int32) (*login.User, *login.Error) {
+	userObj, err := models.Users(models.UserWhere.UserID.EQ(int(userId))).One(context.TODO(), s.db)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, login.WrapError(err, "not found", login.UserNotFoundError)
@@ -49,7 +49,7 @@ func (s *PSQLStorage) GetUser(userId int) (*login.User, *login.Error) {
 			return nil, login.WrapError(err, "internal error", login.InternalError)
 		}
 	}
-	return &login.User{UserID: userObj.UserID, Username: userObj.Username, Email: userObj.Email,
+	return &login.User{UserID: int32(userObj.UserID), Username: userObj.Username, Email: userObj.Email,
 		Mood: userObj.Mood.String}, nil
 }
 
@@ -64,6 +64,6 @@ func (s *PSQLStorage) CheckPassword(email string, passwordHash string) (*login.U
 			return nil, login.WrapError(err, "internal error", login.InternalError)
 		}
 	}
-	return &login.User{UserID: userObj.UserID, Username: userObj.Username, Email: userObj.Email,
+	return &login.User{UserID: int32(userObj.UserID), Username: userObj.Username, Email: userObj.Email,
 		Mood: userObj.Mood.String}, nil
 }

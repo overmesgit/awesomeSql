@@ -45,7 +45,7 @@ func main() {
 		if err != nil {
 			log.Fatalf("could not sing up: %v", err)
 		}
-		log.Printf("%v: %v", *command, r.GetUserId())
+		log.Printf("%v: %v", *command, r.GetUser())
 	} else {
 		request := pb.LoginRequest{
 			Email: *email, Password: *password,
@@ -60,7 +60,7 @@ func main() {
 				log.Fatalf("could not login: %v", err)
 			}
 		}
-		log.Printf("%v: %v", *command, r.GetUserId())
+		log.Printf("%v: %v", *command, r.GetUser())
 	}
 
 }

@@ -1,4 +1,4 @@
-output   = "pkg/user/models"
+output   = "login_psql/models"
 wipe     = true
 
 [psql]
