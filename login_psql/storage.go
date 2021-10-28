@@ -23,9 +23,22 @@ func NewPSQLStorage(conn string) (*PSQLStorage, error) {
 	return &PSQLStorage{db}, nil
 }
 
-func (s *PSQLStorage) Create(user *login.User, passwordHash string) (int32, *login.Error) {
-	userObj := &models.User{Username: user.Username, Password: passwordHash, Email: user.Email,
+func psqlUser(user *login.User, passwordHash string) *models.User {
+	return &models.User{Username: user.Username, Password: passwordHash, Email: user.Email,
 		Mood: null.StringFrom(user.Mood)}
+}
+
+func userFromPsqlUser(userObj *models.User) *login.User {
+	return &login.User{UserID: int32(userObj.UserID), Username: userObj.Username, Email: userObj.Email,
+		Mood: userObj.Mood.String}
+}
+
+func (s *PSQLStorage) GetDB() *sql.DB {
+	return s.db
+}
+
+func (s *PSQLStorage) Create(user *login.User, passwordHash string) (int32, *login.Error) {
+	userObj := psqlUser(user, passwordHash)
 	err := userObj.Insert(context.TODO(), s.db, boil.Infer())
 	if err != nil {
 		var e *pq.Error
@@ -49,8 +62,7 @@ func (s *PSQLStorage) GetUser(userId int32) (*login.User, *login.Error) {
 			return nil, login.WrapError(err, "internal error", login.InternalError)
 		}
 	}
-	return &login.User{UserID: int32(userObj.UserID), Username: userObj.Username, Email: userObj.Email,
-		Mood: userObj.Mood.String}, nil
+	return userFromPsqlUser(userObj), nil
 }
 
 func (s *PSQLStorage) CheckPassword(email string, passwordHash string) (*login.User, *login.Error) {
@@ -58,12 +70,10 @@ func (s *PSQLStorage) CheckPassword(email string, passwordHash string) (*login.U
 	userObj, err := query.One(context.TODO(), s.db)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			//return nil, login.WrapError(err, "not found", login.UserNotFoundError)
-			return nil, login.WrapError(err, "not found", 19)
+			return nil, login.WrapError(err, "not found", login.UserNotFoundError)
 		} else {
 			return nil, login.WrapError(err, "internal error", login.InternalError)
 		}
 	}
-	return &login.User{UserID: int32(userObj.UserID), Username: userObj.Username, Email: userObj.Email,
-		Mood: userObj.Mood.String}, nil
+	return userFromPsqlUser(userObj), nil
 }

@@ -20,22 +20,34 @@ type server struct {
 	UnimplementedUserSignUpServer
 }
 
-func (s *server) SignUp(ctx context.Context, in *SignUpRequest) (*LoginResponse, error) {
-	req := login.SignUpRequest{
+func userToGrpcUser(userObj *login.User) User {
+	return User{UserId: userObj.UserID, Username: userObj.Username, Email: userObj.Email, Mood: userObj.Mood}
+}
+
+func grpcSignReqToSignReq(in *SignUpRequest) login.SignUpRequest {
+	return login.SignUpRequest{
 		Username: in.Username, Password: login.Password(in.Password),
 		Email: in.Email, Mood: in.Mood}
-	userObj, err := s.service.SingUp(req)
+}
+
+func (s *server) SignUp(ctx context.Context, in *SignUpRequest) (*LoginResponse, error) {
+	req := grpcSignReqToSignReq(in)
+	userObj, err := s.service.SignUp(req)
 	if err != nil {
 		return nil, errors.New(err.Error())
 	}
-	user := User{UserId: userObj.UserID, Username: userObj.Username, Email: userObj.Email, Mood: userObj.Mood}
+	user := userToGrpcUser(userObj)
 	return &LoginResponse{User: &user}, nil
 }
 
-func (s *server) Login(ctx context.Context, in *LoginRequest) (*LoginResponse, error) {
-	userObj, err := s.service.Login(login.LoginRequest{
+func grpcLoginReqToLoginRe(in *LoginRequest) login.LoginRequest {
+	return login.LoginRequest{
 		Email: in.Email, Password: login.Password(in.Password),
-	})
+	}
+}
+
+func (s *server) Login(ctx context.Context, in *LoginRequest) (*LoginResponse, error) {
+	userObj, err := s.service.Login(grpcLoginReqToLoginRe(in))
 	if err != nil {
 		switch err.Code() {
 		case login.UserNotFoundError:
@@ -44,7 +56,7 @@ func (s *server) Login(ctx context.Context, in *LoginRequest) (*LoginResponse, e
 			return nil, err
 		}
 	}
-	user := User{UserId: userObj.UserID, Username: userObj.Username, Email: userObj.Email, Mood: userObj.Mood}
+	user := userToGrpcUser(userObj)
 	return &LoginResponse{User: &user}, nil
 }
 

@@ -9,7 +9,7 @@ type SignUpRequest struct {
 	Mood     string   `validate:"required"`
 }
 
-func UserFromSignupRequest(req SignUpRequest) *User {
+func userFromSignupRequest(req SignUpRequest) *User {
 	return &User{
 		Username: req.Username,
 		Email:    req.Email,
@@ -17,13 +17,13 @@ func UserFromSignupRequest(req SignUpRequest) *User {
 	}
 }
 
-func (s UserService) SingUp(req SignUpRequest) (*User, *Error) {
+func (s UserService) SignUp(req SignUpRequest) (*User, *Error) {
 	err := validate.Struct(req)
 	if err != nil {
 		log.WithField("error", err).Info("Login user validation error")
 		return nil, WrapError(err, "validation error", ValidationError)
 	}
-	user := UserFromSignupRequest(req)
+	user := userFromSignupRequest(req)
 	log.WithFields(log.Fields{"username": user.Username}).Info("Create new user")
 	userId, signUpError := s.Create(user, req.Password.Hash())
 	if signUpError != nil {
