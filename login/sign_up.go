@@ -7,6 +7,7 @@ type SignUpRequest struct {
 	Password Password `validate:"required"`
 	Email    string   `validate:"required"`
 	Mood     string   `validate:"required"`
+	Type     string   `validate:"required"`
 }
 
 func userFromSignupRequest(req SignUpRequest) *User {
@@ -14,6 +15,7 @@ func userFromSignupRequest(req SignUpRequest) *User {
 		Username: req.Username,
 		Email:    req.Email,
 		Mood:     req.Mood,
+		Type:     UserType(req.Type),
 	}
 }
 

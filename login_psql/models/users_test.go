@@ -568,7 +568,7 @@ func testUsersSelect(t *testing.T) {
 }
 
 var (
-	userDBTypes = map[string]string{`UserID`: `integer`, `Username`: `character varying`, `Password`: `character varying`, `Email`: `character varying`, `Mood`: `enum.enum_mood('happy','sad','neutral')`}
+	userDBTypes = map[string]string{`UserID`: `integer`, `Username`: `character varying`, `Password`: `text`, `Email`: `character varying`, `Mood`: `enum.enum_mood('happy','sad','neutral')`, `Type`: `enum.enum_type('customer','seller')`}
 	_           = bytes.MinRead
 )
 

@@ -57,3 +57,9 @@ const (
 	EnumMoodSad     = "sad"
 	EnumMoodNeutral = "neutral"
 )
+
+// Enum values for enum_type
+const (
+	EnumTypeCustomer = "customer"
+	EnumTypeSeller   = "seller"
+)

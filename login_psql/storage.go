@@ -24,13 +24,23 @@ func NewPSQLStorage(conn string) (*PSQLStorage, error) {
 }
 
 func psqlUser(user *login.User, passwordHash string) *models.User {
-	return &models.User{Username: user.Username, Password: passwordHash, Email: user.Email,
-		Mood: null.StringFrom(user.Mood)}
+	return &models.User{
+		Username: user.Username,
+		Password: passwordHash,
+		Email:    user.Email,
+		Mood:     null.StringFrom(user.Mood),
+		Type:     string(user.Type),
+	}
 }
 
 func userFromPsqlUser(userObj *models.User) *login.User {
-	return &login.User{UserID: int32(userObj.UserID), Username: userObj.Username, Email: userObj.Email,
-		Mood: userObj.Mood.String}
+	return &login.User{
+		UserID:   int32(userObj.UserID),
+		Username: userObj.Username,
+		Email:    userObj.Email,
+		Mood:     userObj.Mood.String,
+		Type:     login.UserType(userObj.Type),
+	}
 }
 
 func (s *PSQLStorage) GetDB() *sql.DB {
@@ -55,6 +65,7 @@ func (s *PSQLStorage) Create(user *login.User, passwordHash string) (int32, *log
 
 func (s *PSQLStorage) GetUser(userId int32) (*login.User, *login.Error) {
 	userObj, err := models.Users(models.UserWhere.UserID.EQ(int(userId))).One(context.TODO(), s.db)
+
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, login.WrapError(err, "not found", login.UserNotFoundError)

@@ -29,6 +29,7 @@ type User struct {
 	Password string      `boil:"password" json:"password" toml:"password" yaml:"password"`
 	Email    string      `boil:"email" json:"email" toml:"email" yaml:"email"`
 	Mood     null.String `boil:"mood" json:"mood,omitempty" toml:"mood" yaml:"mood,omitempty"`
+	Type     string      `boil:"type" json:"type" toml:"type" yaml:"type"`
 
 	R *userR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L userL  `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -40,12 +41,14 @@ var UserColumns = struct {
 	Password string
 	Email    string
 	Mood     string
+	Type     string
 }{
 	UserID:   "user_id",
 	Username: "username",
 	Password: "password",
 	Email:    "email",
 	Mood:     "mood",
+	Type:     "type",
 }
 
 var UserTableColumns = struct {
@@ -54,12 +57,14 @@ var UserTableColumns = struct {
 	Password string
 	Email    string
 	Mood     string
+	Type     string
 }{
 	UserID:   "users.user_id",
 	Username: "users.username",
 	Password: "users.password",
 	Email:    "users.email",
 	Mood:     "users.mood",
+	Type:     "users.type",
 }
 
 // Generated where
@@ -140,12 +145,14 @@ var UserWhere = struct {
 	Password whereHelperstring
 	Email    whereHelperstring
 	Mood     whereHelpernull_String
+	Type     whereHelperstring
 }{
 	UserID:   whereHelperint{field: "\"users\".\"user_id\""},
 	Username: whereHelperstring{field: "\"users\".\"username\""},
 	Password: whereHelperstring{field: "\"users\".\"password\""},
 	Email:    whereHelperstring{field: "\"users\".\"email\""},
 	Mood:     whereHelpernull_String{field: "\"users\".\"mood\""},
+	Type:     whereHelperstring{field: "\"users\".\"type\""},
 }
 
 // UserRels is where relationship names are stored.
@@ -165,9 +172,9 @@ func (*userR) NewStruct() *userR {
 type userL struct{}
 
 var (
-	userAllColumns            = []string{"user_id", "username", "password", "email", "mood"}
+	userAllColumns            = []string{"user_id", "username", "password", "email", "mood", "type"}
 	userColumnsWithoutDefault = []string{"username", "password", "email", "mood"}
-	userColumnsWithDefault    = []string{"user_id"}
+	userColumnsWithDefault    = []string{"user_id", "type"}
 	userPrimaryKeyColumns     = []string{"user_id"}
 )
 

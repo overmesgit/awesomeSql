@@ -22,7 +22,14 @@ package User {
 package Product {
   (Add product)
   (Get product)
+  (Update product)
   (List product)
+
+  package Order {
+    (List orders)
+    (Make order)
+    (Close order)
+  }
 }
 
 package Basket {

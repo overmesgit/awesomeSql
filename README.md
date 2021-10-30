@@ -26,3 +26,20 @@ aws ecr get-login-password --region ap-northeast-1 | docker login --username AWS
 docker tag login:latest 458732527702.dkr.ecr.ap-northeast-1.amazonaws.com/login:latest
 docker push 458732527702.dkr.ecr.ap-northeast-1.amazonaws.com/login:latest
 ```
+
+### Add field
+```
+(([.^:]*)(\w*)\.Mood.*)
+
+$1
+Type: $3.Type,
+
+(Mood *string)(.*)
+$1$2
+Type string$2
+```
+Mood is a previous field in struct
+Type is a new field
+
+We find all strings with .Mood string, and replace it with
+founded line + new field 

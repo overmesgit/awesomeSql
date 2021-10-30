@@ -11,11 +11,19 @@ const (
 	EnumMoodNeutral = "neutral"
 )
 
+const (
+	EnumUserTypeCustomer = "customer"
+	EnumUserTypeSeller   = "seller"
+)
+
+type UserType string
+
 type User struct {
 	UserID   int32
 	Username string
 	Email    string
 	Mood     string
+	Type     UserType
 }
 
 type UserService struct {

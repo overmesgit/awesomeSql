@@ -21,13 +21,23 @@ type server struct {
 }
 
 func userToGrpcUser(userObj *login.User) User {
-	return User{UserId: userObj.UserID, Username: userObj.Username, Email: userObj.Email, Mood: userObj.Mood}
+	return User{
+		UserId:   userObj.UserID,
+		Username: userObj.Username,
+		Email:    userObj.Email,
+		Mood:     userObj.Mood,
+		Type:     string(userObj.Type),
+	}
 }
 
 func grpcSignReqToSignReq(in *SignUpRequest) login.SignUpRequest {
 	return login.SignUpRequest{
-		Username: in.Username, Password: login.Password(in.Password),
-		Email: in.Email, Mood: in.Mood}
+		Username: in.Username,
+		Password: login.Password(in.Password),
+		Email:    in.Email,
+		Mood:     in.Mood,
+		Type:     in.Type,
+	}
 }
 
 func (s *server) SignUp(ctx context.Context, in *SignUpRequest) (*LoginResponse, error) {

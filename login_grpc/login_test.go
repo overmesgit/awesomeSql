@@ -74,7 +74,7 @@ func TestUserLogin(t *testing.T) {
 
 	password := "asdf"
 	req := login.SignUpRequest{"art", login.Password(password),
-		"a@a.com", login.EnumMoodHappy}
+		"a@a.com", login.EnumMoodHappy, login.EnumUserTypeCustomer}
 	user, err := service.SignUp(req)
 
 	got, err := service.Login(login.LoginRequest{"a@a.com", ""})
